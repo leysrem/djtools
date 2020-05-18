@@ -58,8 +58,7 @@ input, select, textarea {
   -moz-appearance: none;
   -webkit-appearance: none;
   -ms-appearance: none;
-  appearance: none; 
-  margin-bottom: 10px; }
+  appearance: none; }
 
 /* Basic */
 html {
@@ -154,7 +153,7 @@ sup {
 
 hr {
   border: 0;
-  border-top: solid 1px #ddd; }
+  border-top: solid 2px rgba(150, 150, 150, 0.5); }
 
 blockquote {
   border-left: solid 0.5em #ddd;
@@ -1034,7 +1033,7 @@ form textarea {
   background: rgba(255, 255, 255, 0.75);
   width: 100%;
   border-radius: 0.35em;
-  padding: 0.75em 1em 0.75em 1em;
+  padding: 0.5em 1em 0.5em 1em;
   box-shadow: inset 0 0.1em 0.1em 0 rgba(0, 0, 0, 0.05);
   border: solid 1px rgba(0, 0, 0, 0.15);
   -moz-transition: all 0.35s ease-in-out;
@@ -1052,7 +1051,7 @@ form input[type="text"],
 form input[type="email"],
 form input[type="password"],
 form select {
-  line-height: 1.25em; }
+  line-height: 1em; }
 form textarea {
   min-height: 14em; }
 form ::-webkit-input-placeholder {
@@ -1207,8 +1206,7 @@ button,
 
 #logo {
   position: relative;
-  margin: 1.75em 1.5em 1.5em 1.5em;
-  min-height: 48px;
+  margin: 1em 1.5em 1em 1.5em;
   cursor: default; }
   #logo h1 {
     position: relative;
@@ -1227,6 +1225,9 @@ button,
     position: absolute;
     left: 0;
     top: 0; }
+  #logo #title {
+    text-align: center;
+  }
 
 #nav ul {
   list-style: none;
@@ -1596,6 +1597,7 @@ li a{color:#eeeedd;background:#333;padding:5px;display:block;}
 li a:hover{text-decoration:none;}
 
 .artistes {
+  margin-bottom: 10px;
   position: relative;
   -webkit-appearance: none;
   display: block;
@@ -1605,9 +1607,13 @@ li a:hover{text-decoration:none;}
   background: rgba(255, 255, 255, 0.75);
   width: 100%;
   border-radius: 0.35em;
-  padding: 0.75em 1em 0.75em 1em;
+  padding: 0.3em 1em 0.3em 1em;
   box-shadow: inset 0 0.1em 0.1em 0 rgba(0, 0, 0, 0.05);
   border: solid 1px rgba(0, 0, 0, 0.15);
+}
+
+.input-search-bar {
+  margin-top: 50px;
 }
 
 .genres {
@@ -1620,7 +1626,7 @@ li a:hover{text-decoration:none;}
   background: rgba(255, 255, 255, 0.75);
   width: 100%;
   border-radius: 0.35em;
-  padding: 0.75em 1em 0.75em 1em;
+  padding: 0.3em 1em 0.3em 1em;
   box-shadow: inset 0 0.1em 0.1em 0 rgba(0, 0, 0, 0.05);
   border: solid 1px rgba(0, 0, 0, 0.15);
 }
@@ -1721,4 +1727,12 @@ li a:hover{text-decoration:none;}
   font-size: 22px;
   background-color: rgba(0,0,0,0.05);
   border-width: 0 3px 3px 3px;
+}
+
+.input-upload {
+  margin: 20px 0 20px 0;
+}
+
+.my-2 {
+  margin: 10px 0 10px 0;
 }

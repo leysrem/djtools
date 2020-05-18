@@ -81,20 +81,18 @@
 				<div class="top">
 
 					<!-- Logo -->
-						<div id="logo">
-							<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
-							<h1 id="title">Jane Doe</h1>
-							<p>Hyperspace Engineer</p>
-						</div>
+					<div id="logo">
+						<h1 id="title">DJTools</h1>
+					</div>
 
 					<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li><a href="album.html"><span class="icon solid fa-th">Albums</span></a></li>
-							<li><a href="playlist.html"><span class="icon solid fa-th">Playlist</span></a></li>
-							<li><a href="ajouter-morceau.html"><span class="icon solid fa-plus">Ajouter un morceau</span></a></li>
-							<li><a href="ajouter-album.html"><span class="icon solid fa-plus">Ajouter un album</span></a></li>
-							<li><a href="ajouter-playlist.html"><span class="icon solid fa-plus">Ajouter une playlist</span></a></li>
+							<li><a href="album.php"><span class="icon solid fa-th">Albums</span></a></li>
+							<li><a href="playlist.php"><span class="icon solid fa-th">Playlist</span></a></li>
+							<li><a href="ajouter-morceau.php"><span class="icon solid fa-plus">Ajouter un morceau</span></a></li>
+							<li><a href="ajouter-album.php"><span class="icon solid fa-plus">Ajouter un album</span></a></li>
+							<li><a href="ajouter-playlist.php"><span class="icon solid fa-plus">Ajouter une playlist</span></a></li>
 						</ul>
 					</nav>
 				</div>
@@ -108,7 +106,7 @@
 							<div class="row">
 								<div class="col-12 col-12-mobile">
 									<article class="item" id='1'>
-										<form class="addform" action="ajouter.html" method="get">
+										<form class="addform" action="playlist-ele.php?#AJOUTER-L'ID" method="get">
 											<h2>Ajouter une playlist</h2>
 
 											<div class="avatar-upload">

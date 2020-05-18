@@ -38,19 +38,17 @@
 
 					<!-- Logo -->
 						<div id="logo">
-							<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
-							<h1 id="title">Jane Doe</h1>
-							<p>Hyperspace Engineer</p>
+							<h1 id="title">DJTools</h1>
 						</div>
 
 					<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li><a href="album.html"><span class="icon solid fa-th">Albums</span></a></li>
-							<li><a href="playlist.html"><span class="icon solid fa-th">Playlist</span></a></li>
-							<li><a href="ajouter-morceau.html"><span class="icon solid fa-plus">Ajouter un morceau</span></a></li>
-							<li><a href="ajouter-album.html"><span class="icon solid fa-plus">Ajouter un album</span></a></li>
-							<li><a href="ajouter-playlist.html"><span class="icon solid fa-plus">Ajouter une playlist</span></a></li>
+							<li><a href="album.php"><span class="icon solid fa-th">Albums</span></a></li>
+							<li><a href="playlist.php"><span class="icon solid fa-th">Playlist</span></a></li>
+							<li><a href="ajouter-morceau.php"><span class="icon solid fa-plus">Ajouter un morceau</span></a></li>
+							<li><a href="ajouter-album.php"><span class="icon solid fa-plus">Ajouter un album</span></a></li>
+							<li><a href="ajouter-playlist.php"><span class="icon solid fa-plus">Ajouter une playlist</span></a></li>
 						</ul>
 					</nav>
 				</div>
@@ -60,24 +58,24 @@
 			<div id="main">
 				<!-- Portfolio -->
 				<section id="portfolio" class="two">
-					<input type="text" id="myInputSearchBar" placeholder="Rechercher un album ..." title="Type in a name">
+					<input type="text" id="myInputSearchBar" placeholder="Rechercher un album ..." title="Type in a name" class='my-2'>
 					<div class="container flex-container">
-						<a href="album-ele.html">
+						<a href="album-ele.php?#ALBUM-ID">
 							<div class='box-container'>
-								<div class='album-cover' style="background-image: url('images/ptest1.jpg');"></div>
-								<div class='box-desc'>RAP</div>
+								<div class='album-cover' style="background-image: url('images/test1.jpg');"></div>
+								<div class='box-desc'>NI</div>
 							</div>
 						</a>
-						<a href="album-ele.html">
+						<a href="album-ele.php?#ALBUM-ID">
 							<div class='box-container'>
-								<div class='album-cover' style="background-image: url('images/ptest2.jpg');"></div>
-								<div class='box-desc'>ROCK</div>
+								<div class='album-cover' style="background-image: url('images/test2.jpg');"></div>
+								<div class='box-desc'>A1</div>
 							</div>
 						</a>
-						<a href="album-ele.html">
+						<a href="album-ele.php?#ALBUM-ID">
 							<div class='box-container'>
-								<div class='album-cover' style="background-image: url('images/ptest3.jpg');"></div>
-								<div class='box-desc'>FUNK</div>
+								<div class='album-cover' style="background-image: url('images/test3.jpg');"></div>
+								<div class='box-desc'>PNL</div>
 							</div>
 						</a>
 					</div>

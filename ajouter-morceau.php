@@ -32,7 +32,7 @@
 			function modifier_artistes(action) {
 				if (action == 'ajouter-artiste') {
 					x++; //text box increment
-					$('.wrapper-artistes').append("<input placeholder='Selectionner l artiste' list='Artistes' id='Artiste-"+x+"' class='artistes' required/>");
+					$('.wrapper-artistes').append("<input placeholder='Selectionner l artiste' name='artiste[]' list='Artistes' id='Artiste-"+x+"' class='artistes' required/>");
 				} else if (action == 'supprimer-artiste') {
 					x--;
 					$('.artistes').last().remove();
@@ -77,20 +77,18 @@
 				<div class="top">
 
 					<!-- Logo -->
-						<div id="logo">
-							<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
-							<h1 id="title">Jane Doe</h1>
-							<p>Hyperspace Engineer</p>
-						</div>
+					<div id="logo">
+						<h1 id="title">DJTools</h1>
+					</div>
 
 					<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li><a href="album.html"><span class="icon solid fa-th">Albums</span></a></li>
-							<li><a href="playlist.html"><span class="icon solid fa-th">Playlist</span></a></li>
-							<li><a href="ajouter-morceau.html"><span class="icon solid fa-plus">Ajouter un morceau</span></a></li>
-							<li><a href="ajouter-album.html"><span class="icon solid fa-plus">Ajouter un album</span></a></li>
-							<li><a href="ajouter-playlist.html"><span class="icon solid fa-plus">Ajouter une playlist</span></a></li>
+							<li><a href="album.php"><span class="icon solid fa-th">Albums</span></a></li>
+							<li><a href="playlist.php"><span class="icon solid fa-th">Playlist</span></a></li>
+							<li><a href="ajouter-morceau.php"><span class="icon solid fa-plus">Ajouter un morceau</span></a></li>
+							<li><a href="ajouter-album.php"><span class="icon solid fa-plus">Ajouter un album</span></a></li>
+							<li><a href="ajouter-playlist.php"><span class="icon solid fa-plus">Ajouter une playlist</span></a></li>
 						</ul>
 					</nav>
 				</div>
@@ -104,12 +102,13 @@
 							<div class="row">
 								<div class="col-12 col-12-mobile">
 									<article class="item" id='1'>
-										<form class="addform" action="ajouter.html" method="get">
+										<form class="addform" action="" method="get">
 											<h2>Ajouter un morceau</h2>
 											<fieldset>
 												<input class='input-upload' id='le-morceau' type="file" required accept="audio/mp3, audio/mp4, audio/wma, audio/ogg, audio/wav">
 											</fieldset>
 											<input placeholder="Nom du morceau" type="text" tabindex="1" name='titre-morceau' required autofocus> 
+											<hr>
 											<fieldset>
 												<div class="wrapper-genres">
 													<input placeholder="Selectionner le genre" name="genre" list="Genres" class="genres" required/>
@@ -123,13 +122,14 @@
 													</datalist>
 												</div>
 											</fieldset>	
+											<hr>
 											<fieldset>
 												<button type="button" class='modifier-artistes-btn' id="ajouter-artiste" onclick="modifier_artistes(this.id)">Ajouter un artiste</button>
 												<button type="button" class='modifier-artistes-btn' id="supprimer-artiste" onclick="modifier_artistes(this.id)" disabled>Supprimer un artiste</button>
 											</fieldset>
 											<fieldset>
 												<div class="wrapper-artistes">
-													<input placeholder="Selectionner l artiste" name="artiste" list="Artistes" id="Artiste-1" class="artistes" required/>
+													<input placeholder="Selectionner l artiste" name="artiste[]" list="Artistes" id="Artiste-1" class="artistes" required/>
 
 													<datalist id="Artistes" tabindex="2" required>
 														<option value="Exemple artiste 1">
@@ -140,8 +140,9 @@
 													</datalist>
 												</div>
 											</fieldset>
+											<hr>
 											<fieldset>
-												<input type="text" id="myInputSearchBar" placeholder="Rechercher un album ..." title="Type in a name">
+												<input type="text" id="myInputSearchBar" placeholder="Rechercher un album ..." title="Type in a name" class='input-search-bar'>
 											</fieldset>
 
 											<div class='item-container'>

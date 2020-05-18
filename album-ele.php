@@ -4,21 +4,6 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
-<?php
-	$dataBase = mysqli_connect ( "localhost" , "root" , "" ) ;
-
-	//--- Ouverture de la base de données
-	mysqli_select_db ( $dataBase, "djtools" ) ;
-
-	$requete = "select * from morceau;";
-
-	$date = "select date_morceau, DATE_FORMAT(date_morceau, '%Y') from morceau;";
-
-	$resultat = mysqli_query($dataBase, $requete , MYSQLI_USE_RESULT) or die(mysql_error());
-
-	
-
-?>
 <html>
 	<head>
 		<title>Prologue by HTML5 UP</title>
@@ -36,17 +21,15 @@
 				<div class="top">
 
 					<!-- Logo -->
-						<div id="logo">
-							<span class="image avatar48"><img src="images/avatar.jpg" alt=""/></span>
-							<h1 id="title">Dj Tools</h1>
-							<p>Logiciel de DJ</p>
-						</div>
+					<div id="logo">
+						<h1 id="title">DJTools</h1>
+					</div>
 
 					<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li><a href="index.php"><span class="icon solid fa-th">Albums</span></a></li>
-							<li><a href="#portfolio"><span class="icon solid fa-th">Playlist</span></a></li>
+							<li><a href="album.php"><span class="icon solid fa-th">Albums</span></a></li>
+							<li><a href="playlist.php"><span class="icon solid fa-th">Playlist</span></a></li>
 							<li><a href="ajouter-morceau.php"><span class="icon solid fa-plus">Ajouter un morceau</span></a></li>
 							<li><a href="ajouter-album.php"><span class="icon solid fa-plus">Ajouter un album</span></a></li>
 							<li><a href="ajouter-playlist.php"><span class="icon solid fa-plus">Ajouter une playlist</span></a></li>
@@ -64,7 +47,6 @@
 								<div class="col-12 col-12-mobile">
 									<article class="item" id='1'>
 										<form class="addform" action="ajouter.html" method="get">
-											<h2>Musique</h2>
 											<div class="container">
 												<div class="row">
 													<div class="col-3 col-12-mobile">
@@ -86,50 +68,66 @@
 							</div>
 							<div class='item-container'>
 							<table id="playlist">
-
-								<?php
-											
-									echo "<tr>";
-										echo "<th></th>";
-										echo "<th>Titre</th>";
-										echo "<th>Date</th>";
-										echo "<th>Durée</th>";
-										echo "<th></th>";
-										echo "<th>Ajouter</th>";
-										echo "</tr>";
-										
-										while ($ligne = mysqli_fetch_array($resultat,MYSQLI_ASSOC))
-										{
-											//--- Afficher une ligne du tableau HTML pour chaque enregistrement de la table 
-											echo "<tr>\n";
-											echo "<td> <a href=". $ligne['url_morceau'] ."> <i class='fas fa-play'></i> </a> </td>\n";
-											echo "<td>" . $ligne['titre_morceau']       . "</td>\n" ;
-											echo "<td>" . $ligne['date_morceau']    . "</td>\n" ;
-											echo "<td>" . $ligne['duree_morceau']/60 . "</td>\n" ;
-											echo "<td>" . $ligne['url_morceau'] . "</td>\n" ;
-											echo "<td> <i class='fas fa-plus-square'></i> </td>\n";
-											echo "</tr>\n";
-										}
-										
-										//--- Libérer l'espace mémoire du résultat de la requête
-										mysqli_free_result ( $resultat ) ;
-
-										//--- Déconnection de la base de données
-										mysqli_close ( $dataBase ) ;  
-								?>
+								<tr >
+									<td> <a href="PNL-Blanka.mp3"> <i class="fas fa-play"></i> </a> </td>
+									<td> Blanka </td>
+									<td> PNL </td>
+									<td> 5:04 </td>
+									<td> 2019 </td>
+									<td> <i class="fas fa-plus"></i> </td>
+								</tr>
+								<tr>
+									<td> <a href="koba-lad-mortel-video-clip-inspire-de-la-serie-mortel.mp3"> <i class="fas fa-play"></i> </a> </td>	
+									<td> Mortel </td>
+									<td> Koba </td>
+									<td> 5:04 </td>
+									<td> 2019 </td>
+									<td> <i class="fas fa-plus"></i> </td>
+								</tr>
+								<tr>
+									<td> <a href="PNL - Deux Frères [Clip officiel].mp3"> <i class="fas fa-play"></i> </a> </td>	
+									<td> Deux frères </td>
+									<td> PNL </td>
+									<td> 5:04 </td>
+									<td> 2019 </td>
+									<td> <i class="fas fa-plus"></i> </td>
+								</tr>
+								<tr>
+									<td> <a href="PNL - Deux Frères [Clip officiel].mp3"> <i class="fas fa-play"></i> </a> </td>	
+									<td> Deux frères </td>
+									<td> PNL </td>
+									<td> 5:04 </td>
+									<td> 2019 </td>
+									<td> <i class="fas fa-plus"></i> </td>
+								</tr>
+								<tr>
+									<td> <a href="PNL - Deux Frères [Clip officiel].mp3"> <i class="fas fa-play"></i> </a> </td>	
+									<td> Deux frères </td>
+									<td> PNL </td>
+									<td> 5:04 </td>
+									<td> 2019 </td>
+									<td> <i class="fas fa-plus"></i> </td>
+								</tr>
+								<tr>
+									<td> <a href="PNL - Deux Frères [Clip officiel].mp3"> <i class="fas fa-play"></i> </a> </td>	
+									<td> Deux frères </td>
+									<td> PNL </td>
+									<td> 5:04 </td>
+									<td> 2019 </td>
+									<td> <i class="fas fa-plus"></i> </td>
+								</tr>
+								
 							</table>
-							<?php
-								echo "</div>";
-									echo "<audio id='audio' tabindex='0' controls='' controlsList='nodownload'>";
-									while (  $ligne = mysqli_fetch_array($resultat,MYSQLI_ASSOC)  )
-										echo"<source src=" .$ligne['url_morceau'].">";
-										echo "Your Fallback goes here";
-								echo "</audio>";
-							?>
-						
+							</div>
 						</div>
 					</section>
 				</div>
+				<audio id="audio" preload="auto" tabindex="0" controls="" controlsList="nodownload">
+					<source src="PNL-Blanka.mp3">
+					Your Fallback goes here
+				</audio>
+
+
 		<!-- Scripts -->
 			<script src="assets/js/jquery.scrolly.min.js"></script>
 			<script src="assets/js/jquery.scrollex.min.js"></script>
@@ -137,5 +135,6 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+
 	</body>
 </html>
