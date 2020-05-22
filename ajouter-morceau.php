@@ -64,7 +64,7 @@
 	  try {
 		  $db = new PDO($dsn, $user, $password);
 		   if ($db) {
-		
+			
   
 		   // Alerte a chaque fois qu'une requête échoue
 		   $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -72,8 +72,7 @@
 		   // Désactive la simulation des requêtes préparés, 
 		   // utilise l'interface native pour récupérer les données et leur type.
 		   $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); 
-
-
+			
 		   // Requete pour afficher la liste des albums
 			$RsqlAlbum = 'SELECT * FROM album';
 
@@ -81,14 +80,16 @@
 			$query->execute();
 			$albums = $query->fetchAll(PDO::FETCH_ASSOC);
 			
+			
 
-			if (isset($_GET["option"]) == "ajouter") {
+			if (isset($_POST["option"]) == "ajouter") {
 
-				$nom_morceau = $_GET["titre-morceau"];
-				$nom_genre = $_GET["genre"];
-				$artistes = $_GET["artiste"];
-				$id_albums = $_GET["id_album"];
-				
+				$id_albums = $_POST["id_album"];
+
+				$nom_genre = $_POST["genre"];
+				$artistes = $_POST["artiste"];
+				$nom_morceau = $_POST["titre-morceau"];
+
 				$verifGenre = "SELECT * FROM genre WHERE nom_genre = '".$nom_genre."'";
 
 				$query = $db->prepare($verifGenre);
@@ -127,6 +128,108 @@
 					$query = $db->prepare($ajouterMorceau);
 					$query->execute();
 				}
+				
+					// RECUP ID DU NOUVEAU MORCEAU
+					$getLastMorceau = "SELECT MAX(id_morceau) as id_morceau FROM morceau";
+					$query = $db->prepare($getLastMorceau);
+					$query->execute();
+					$morceaux = $query->fetchAll(PDO::FETCH_ASSOC);
+
+					foreach($morceaux as $morceau) {
+						$id_morceau = $morceau["id_morceau"];
+					}
+					// VERIF POUR CHAQUE ARTISTE
+					for($i=0;$i < count($artistes);$i++) 
+					{
+
+						$verifArtiste = "SELECT * FROM Artiste WHERE nom_artiste = '".$artistes[$i]."'";
+
+						$query = $db->prepare($verifArtiste);
+						$query->execute();
+						$theArtist = $query->fetchAll(PDO::FETCH_ASSOC);
+
+						// GESTION ARTISTE
+						if(!count($theArtist) == 0) 
+						{
+							// SI IL EXISTE	
+							foreach($theArtist as $artiste) 
+							{
+								$id_artiste = $artiste['id_artiste'];
+							}
+							// AJOUTE L'ARTISTE AU NOUVEAU MORCEAU
+							$ajouterArtiste = "INSERT INTO artiste_morceau (Ref_morceau,Ref_artiste) VALUES ('".$id_morceau."','".$id_artiste."')";
+							$query = $db->prepare($ajouterArtiste);
+							$query->execute();
+						} else {
+							// AJOUTER LE NOUVELLE ARTISTE
+							$ajouterNewArtiste = "INSERT INTO artiste (nom_artiste) VALUES ('".$artistes[$i]."')";
+							$query = $db->prepare($ajouterNewArtiste);
+							$query->execute();
+							// RECUP ID DU NOUVELLE ARTISTE
+							$getLastArtiste = "SELECT MAX(id_artiste) as id_artiste FROM artiste";
+							$query = $db->prepare($getLastArtiste);
+							$query->execute();
+							$newArtist = $query->fetchAll(PDO::FETCH_ASSOC);
+
+							foreach($newArtist as $artiste) 
+							{
+								$id_artiste = $artiste['id_artiste'];
+							}
+							//AJOUTE L'ARTISTE AU MORCEAU
+							$ajouterNewArtiste = "INSERT INTO artiste_morceau (Ref_morceau,Ref_artiste) VALUES ('".$id_morceau."','".$id_artiste."')";
+							$query = $db->prepare($ajouterNewArtiste);
+							$query->execute();
+						}
+					}
+
+					// RECUP ID DU NOUVEAU MORCEAU
+					$getLastMorceau = "SELECT MAX(id_morceau) as id_morceau FROM morceau";
+					$query = $db->prepare($getLastMorceau);
+					$query->execute();
+					$morceaux = $query->fetchAll(PDO::FETCH_ASSOC);
+
+					foreach($morceaux as $morceau) {
+						$id_morceau = $morceau["id_morceau"];
+					}
+					// GESTION FICHIER	
+					$extensions_autorisees = array('.mp3','.mp4','.wma','.ogg','.wav');
+						
+					for($i=0;$i < count($id_albums);$i++) 
+					{
+						
+						$RsqlAlbum = "SELECT * FROM album WHERE id_album = '".$id_albums[$i]."'";
+						$albums = $db->prepare($RsqlAlbum);
+						$albums->execute();
+				
+						// RECUP LE(S) NOM(S) DU/DES ALBUM(S)
+						foreach($albums as $album) {
+							$nom_album = $album['nom_album'];	
+						}
+
+						$file_name = $_FILES['fichier']['name'];	
+						$file_tmp_name = $_FILES['fichier']['tmp_name'];
+						$file_dest = 'albums/'.$nom_album.'/'.$file_name;
+						
+						$file_extension = strrchr($file_name,'.');
+						if(in_array($file_extension,$extensions_autorisees)) {
+							if(copy($file_tmp_name,$file_dest)) {
+								echo 'Fichier envoyé avec succès';
+								
+								$ajouterMorceauAlbum = "INSERT INTO album_morceau (Ref_morceau,Ref_album,url_morceau) VALUES ('".$id_morceau."','".$id_albums[$i]."','".$file_dest."')";
+								$query = $db->prepare($ajouterMorceauAlbum);
+								$query->execute();
+		
+							} else {
+								echo "erreur lors de l'envoie du fichier";
+							}
+		
+						} else {
+							echo "Extension de fichier non autorisé";
+						}
+
+					}
+				
+				header('Location:ajouter-morceau.php');
 			}
 
 	echo "	
@@ -161,10 +264,10 @@
 							<div class='row'>
 								<div class='col-12 col-12-mobile'>
 									<article class='item' id='1'>
-										<form class='addform' action='' method='get'>
+										<form class='addform' action='' method='post' enctype='multipart/form-data'>
 											<h2>Ajouter un morceau</h2>
 											<fieldset>
-												<input class='input-upload' id='le-morceau' type='file' required accept='audio/mp3, audio/mp4, audio/wma, audio/ogg, audio/wav'>
+												<input class='input-upload' id='le-morceau' name='fichier' type='file' required accept='audio/mp3, audio/mp4, audio/wma, audio/ogg, audio/wav'>
 											</fieldset>
 											<input placeholder='Nom du morceau' type='text' tabindex='1' name='titre-morceau' required autofocus> 
 											<hr>
@@ -199,13 +302,22 @@
 											<fieldset>
 												<div class='wrapper-artistes'>
 													<input placeholder='Selectionner l artiste' name='artiste[]' list='Artistes' id='Artiste-1' class='artistes' required/>
-
 													<datalist id='Artistes' tabindex='2' required>
-														<option value='Exemple artiste 1'>
-														<option value='Exemple artiste 2'>
-														<option value='Exemple artiste 3'>
-														<option value='Exemple artiste 4'>
-														<option value='Exemple artiste 5'>
+													";
+													$artistes = 'SELECT * FROM artiste';
+
+													$query = $db->prepare($artistes);
+													$query->execute();
+													$artistes = $query->fetchAll(PDO::FETCH_ASSOC);
+
+													foreach ($artistes as $row => $artiste) 
+													{
+
+												echo "	
+														<option value='".$artiste['nom_artiste']."'>
+													";
+													}
+												echo "
 													</datalist>
 												</div>
 											</fieldset>
@@ -223,7 +335,7 @@
 												echo "
 													<tr class='item-album' id='item-album-".$album['id_album']."'>
 														<td>".$album['nom_album']."</td>
-														<td><input type='checkbox' name='id_album[]' value='".$album['id_album']."' id='item-album-".$album['id_album']."-checkbox'/></td>
+														<td> <input type='checkbox' name='id_album[]' value='".$album['id_album']."' id='item-album-".$album['id_album']."-checkbox'/></td>
 													</tr>
 														";
 												}
