@@ -54,7 +54,7 @@ input::-moz-focus-inner {
   border: 0;
   padding: 0; }
 
-input, select, textarea {
+input[type="checkbox"], select, textarea {
   -moz-appearance: none;
   -webkit-appearance: none;
   -ms-appearance: none;
@@ -1014,16 +1014,18 @@ ul.icons {
     text-align: center;
     border: 0; }
 
+    
+
 /* Form */
-form label {
+.form label {
   display: block;
   text-align: left;
   margin-bottom: 0.5em; }
-form input[type="text"],
-form input[type="email"],
-form input[type="password"],
-form select,
-form textarea {
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="password"],
+.form select,
+.form textarea {
   position: relative;
   -webkit-appearance: none;
   display: block;
@@ -1040,29 +1042,29 @@ form textarea {
   -webkit-transition: all 0.35s ease-in-out;
   -ms-transition: all 0.35s ease-in-out;
   transition: all 0.35s ease-in-out; }
-  form input[type="text"]:focus,
-  form input[type="email"]:focus,
-  form input[type="password"]:focus,
-  form select:focus,
-  form textarea:focus {
+  .form input[type="text"]:focus,
+  .form input[type="email"]:focus,
+  .form input[type="password"]:focus,
+  .form select:focus,
+  .form textarea:focus {
     box-shadow: 0 0 2px 1px #8ebebc;
     background: #fff; }
-form input[type="text"],
-form input[type="email"],
-form input[type="password"],
-form select {
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="password"],
+.form select {
   line-height: 1em; }
-form textarea {
+.form textarea {
   min-height: 14em; }
-form ::-webkit-input-placeholder {
+.form ::-webkit-input-placeholder {
   color: #555 !important; }
-form :-moz-placeholder {
+.form :-moz-placeholder {
   color: #555 !important; }
-form ::-moz-placeholder {
+.form ::-moz-placeholder {
   color: #555 !important; }
-form :-ms-input-placeholder {
+.form :-ms-input-placeholder {
   color: #555 !important; }
-form ::-moz-focus-inner {
+.form ::-moz-focus-inner {
   border: 0; }
 
 /* Table */
@@ -1154,6 +1156,15 @@ button,
     font-weight: 900; }
   .icon.brands:before {
     font-family: 'Font Awesome 5 Brands'; }
+
+  #main  .alert {
+      padding: 10px;
+      text-align: center;
+      background-color: #f5fafa;
+      color: black;
+    }
+
+    
 
 /* Header */
 #header {

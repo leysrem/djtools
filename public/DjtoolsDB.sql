@@ -35,28 +35,17 @@ CREATE TABLE album
 #-------------------------------------------------------------------------------
 #  Créer la table Morceau
 
-CREATE TABLE morceau 
-(	id_morceau INT NOT null PRIMARY KEY	AUTO_INCREMENT,
-	titre_morceau	CHAR( 255 )	NOT NULL,
-	date_morceau 	DATETIME  NOT NULL,
-	duree_morceau CHAR (6) NOT NULL
-     
-) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci ;
+DROP TABLE IF EXISTS `morceau`;
+CREATE TABLE IF NOT EXISTS `morceau` (
+  `id_morceau` int(11) NOT NULL AUTO_INCREMENT,
+  `titre_morceau` varchar(255) NOT NULL,
+  `duree_morceau` varchar(255) NOT NULL,
+  `fk_id_genre` int(11) NOT NULL,
+  PRIMARY KEY (`id_morceau`),
+  KEY `fk_id_genre` (`fk_id_genre`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 #-------------------------------------------------------------------------------
 
-
-#-------------------------------------------------------------------------------
-
-#  Créer la table Playlist 
-
-CREATE TABLE playlist
-(	id_playlist INT NOT null PRIMARY KEY	AUTO_INCREMENT,
-	nom_playlist	CHAR( 255 )	NOT NULL
-     
-) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci ;
-
-
-#-------------------------------------------------------------------------------
 
 #  Créer la table genre
 
@@ -83,6 +72,7 @@ CREATE TABLE album_morceau
 (
   Ref_morceau integer,
   Ref_album   integer,
+ `url_morceau` varchar(255) DEFAULT NULL,
   
   FOREIGN KEY (Ref_morceau) REFERENCES morceau(id_morceau) ON DELETE CASCADE ,            
   FOREIGN KEY (Ref_album) REFERENCES album(id_album) ON DELETE CASCADE ,
@@ -101,16 +91,6 @@ CREATE TABLE genre_morceau
 
 ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
-CREATE TABLE playlist_morceau
-(
-  Ref_playlist integer,
-  Ref_morceau   integer,
-  
-  FOREIGN KEY (Ref_morceau) REFERENCES morceau(id_morceau) ON DELETE CASCADE ,            
-  FOREIGN KEY (Ref_playlist) REFERENCES playlist(id_playlist) ON DELETE CASCADE ,
-  PRIMARY KEY (Ref_morceau,Ref_playlist) 
-
-) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
 CREATE TABLE artiste_morceau
 (

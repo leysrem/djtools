@@ -57,9 +57,11 @@
 	</head>
 
 	<?php
-	  $dsn = 'mysql:dbname=djtools;host=localhost';
-	  $user = 'root';
-	  $password = '';
+	require_once('getID3-master/getID3-master/getid3/getid3.php');
+
+	$dsn = 'mysql:dbname=djtools;host=localhost';
+	$user = 'root';
+	$password = '';
   
 	  try {
 		  $db = new PDO($dsn, $user, $password);
@@ -85,10 +87,26 @@
 			if (isset($_POST["option"]) == "ajouter") {
 
 				$id_albums = $_POST["id_album"];
+				
 
 				$nom_genre = $_POST["genre"];
 				$artistes = $_POST["artiste"];
 				$nom_morceau = $_POST["titre-morceau"];
+
+				for($i=0;$i < count($id_albums);$i++) 
+				{
+						
+					$RsqlAlbum = "SELECT * FROM album WHERE id_album = '".$id_albums[$i]."'";
+					$albums = $db->prepare($RsqlAlbum);
+					$albums->execute();
+			
+					// RECUP LE(S) NOM(S) DU/DES ALBUM(S)
+					foreach($albums as $album) {
+						$nom_album = $album['nom_album'];	
+					}
+				}
+				
+				
 
 				$verifGenre = "SELECT * FROM genre WHERE nom_genre = '".$nom_genre."'";
 
@@ -96,7 +114,10 @@
 				$query->execute();
 				$genres = $query->fetchAll(PDO::FETCH_ASSOC);
 
-			
+
+				
+
+
 				// GESTION GENRE 
 				if(!count($genres) == 0) {	
 					// SI IL EXISTE
@@ -104,11 +125,26 @@
 					{
 						$id_genre = $genre['id_genre'];
 					}
+
+					$file_name = $_FILES['fichier']['name'];	
+					$file_dest = 'albums/'.$nom_album.'/'.$file_name;
+
+					// INITIALISE GETID3
+					$getID3 = new getID3;
+					
+					// ANALYSE LE FICHIER ET RENVOIE LES VALEURS
+					$ThisFileInfo = $getID3->analyze($file_dest);
+
+					if( !empty($ThisFileInfo['playtime_string']) ){ 		$duration =  $ThisFileInfo['playtime_string']; }
+
 					// AJOUTE LE GENRE AU NOUVEAU MORCEAU
-					$ajouterMorceau = "INSERT INTO morceau (titre_morceau, fk_id_genre) VALUES ('".$nom_morceau."','".$id_genre."')";
+					$ajouterMorceau = "INSERT INTO morceau (titre_morceau, fk_id_genre,duree_morceau) VALUES ('".$nom_morceau."','".$id_genre."','".$duration."')";
 					$query = $db->prepare($ajouterMorceau);
 					$query->execute();
+
+
 				} else {
+					
 					// AJOUTER LE NOUVEAU GENRE
 					$ajouterGenre = "INSERT INTO genre (nom_genre) VALUES ('".$nom_genre."')";
 					$query = $db->prepare($ajouterGenre);
@@ -123,21 +159,73 @@
 					{
 						$id_genre = $genre['id_genre'];
 					}
+
+					$file_name = $_FILES['fichier']['name'];	
+					$file_dest = 'albums/'.$nom_album.'/'.$file_name;
+
+					// INITIALISE GETID3
+					$getID3 = new getID3;
+					
+					// ANALYSE LE FICHIER ET RENVOIE LES VALEURS
+					$ThisFileInfo = $getID3->analyze($file_dest);
+
+					if( !empty($ThisFileInfo['playtime_string']) ){ 		$duration =  $ThisFileInfo['playtime_string']; }
+
 					// AJOUTE LE GENRE AU NOUVEAU MORCEAU
-					$ajouterMorceau = "INSERT INTO morceau (titre_morceau, fk_id_genre) VALUES ('".$nom_morceau."','".$id_genre."')";
+					$ajouterMorceau = "INSERT INTO morceau (titre_morceau, fk_id_genre,duree_morceau) VALUES ('".$nom_morceau."','".$id_genre."','".$duration."')";
 					$query = $db->prepare($ajouterMorceau);
 					$query->execute();
-				}
-				
-					// RECUP ID DU NOUVEAU MORCEAU
-					$getLastMorceau = "SELECT MAX(id_morceau) as id_morceau FROM morceau";
-					$query = $db->prepare($getLastMorceau);
-					$query->execute();
-					$morceaux = $query->fetchAll(PDO::FETCH_ASSOC);
 
-					foreach($morceaux as $morceau) {
-						$id_morceau = $morceau["id_morceau"];
+				}
+
+
+				// GESTION FICHIER	
+				$extensions_autorisees = array('.mp3','.mp4','.wma','.ogg','.wav');
+
+				// RECUP ID DU NOUVEAU MORCEAU
+				$getLastMorceau = "SELECT MAX(id_morceau) as id_morceau FROM morceau";
+				$query = $db->prepare($getLastMorceau);
+				$query->execute();
+				$morceaux = $query->fetchAll(PDO::FETCH_ASSOC);
+
+				foreach($morceaux as $morceau) {
+					$id_morceau = $morceau["id_morceau"];
+				}	
+				for($i=0;$i < count($id_albums);$i++) 
+				{
+						
+					$RsqlAlbum = "SELECT * FROM album WHERE id_album = '".$id_albums[$i]."'";
+					$albums = $db->prepare($RsqlAlbum);
+					$albums->execute();
+			
+					// RECUP LE(S) NOM(S) DU/DES ALBUM(S)
+					foreach($albums as $album) {
+						$nom_album = $album['nom_album'];	
 					}
+
+					$file_name = $_FILES['fichier']['name'];	
+					$file_tmp_name = $_FILES['fichier']['tmp_name'];
+					$file_dest = 'albums/'.$nom_album.'/'.$file_name;
+					
+					$file_extension = strrchr($file_name,'.');
+					if(in_array($file_extension,$extensions_autorisees)) {
+						if(copy($file_tmp_name,$file_dest)) {
+							echo 'Fichier envoyé avec succès';
+							
+							$ajouterMorceauAlbum = "INSERT INTO album_morceau (Ref_morceau,Ref_album,url_morceau) VALUES ('".$id_morceau."','".$id_albums[$i]."','".$file_dest."')";
+							$query = $db->prepare($ajouterMorceauAlbum);
+							$query->execute();
+	
+						} else {
+							echo "erreur lors de l'envoie du fichier";
+						}
+	
+					} else {
+						echo "Extension de fichier non autorisé";
+					}
+
+				}
+			
 					// VERIF POUR CHAQUE ARTISTE
 					for($i=0;$i < count($artistes);$i++) 
 					{
@@ -181,56 +269,9 @@
 							$query->execute();
 						}
 					}
-
-					// RECUP ID DU NOUVEAU MORCEAU
-					$getLastMorceau = "SELECT MAX(id_morceau) as id_morceau FROM morceau";
-					$query = $db->prepare($getLastMorceau);
-					$query->execute();
-					$morceaux = $query->fetchAll(PDO::FETCH_ASSOC);
-
-					foreach($morceaux as $morceau) {
-						$id_morceau = $morceau["id_morceau"];
-					}
-					// GESTION FICHIER	
-					$extensions_autorisees = array('.mp3','.mp4','.wma','.ogg','.wav');
-						
-					for($i=0;$i < count($id_albums);$i++) 
-					{
-						
-						$RsqlAlbum = "SELECT * FROM album WHERE id_album = '".$id_albums[$i]."'";
-						$albums = $db->prepare($RsqlAlbum);
-						$albums->execute();
-				
-						// RECUP LE(S) NOM(S) DU/DES ALBUM(S)
-						foreach($albums as $album) {
-							$nom_album = $album['nom_album'];	
-						}
-
-						$file_name = $_FILES['fichier']['name'];	
-						$file_tmp_name = $_FILES['fichier']['tmp_name'];
-						$file_dest = 'albums/'.$nom_album.'/'.$file_name;
-						
-						$file_extension = strrchr($file_name,'.');
-						if(in_array($file_extension,$extensions_autorisees)) {
-							if(copy($file_tmp_name,$file_dest)) {
-								echo 'Fichier envoyé avec succès';
-								
-								$ajouterMorceauAlbum = "INSERT INTO album_morceau (Ref_morceau,Ref_album,url_morceau) VALUES ('".$id_morceau."','".$id_albums[$i]."','".$file_dest."')";
-								$query = $db->prepare($ajouterMorceauAlbum);
-								$query->execute();
-		
-							} else {
-								echo "erreur lors de l'envoie du fichier";
-							}
-		
-						} else {
-							echo "Extension de fichier non autorisé";
-						}
-
-					}
-				
 				header('Location:ajouter-morceau.php');
-			}
+				
+				}
 
 	echo "	
 	<body class='is-preload'>
@@ -247,10 +288,8 @@
 					<nav id='nav'>
 						<ul>
 							<li><a href='album.php'><span class='icon solid fa-th'>Albums</span></a></li>
-							<li><a href='playlist.php'><span class='icon solid fa-th'>Playlist</span></a></li>
 							<li><a href='ajouter-morceau.php'><span class='icon solid fa-plus'>Ajouter un morceau</span></a></li>
 							<li><a href='ajouter-album.php'><span class='icon solid fa-plus'>Ajouter un album</span></a></li>
-							<li><a href='ajouter-playlist.php'><span class='icon solid fa-plus'>Ajouter une playlist</span></a></li>
 						</ul>
 					</nav>
 				</div>
@@ -264,7 +303,7 @@
 							<div class='row'>
 								<div class='col-12 col-12-mobile'>
 									<article class='item' id='1'>
-										<form class='addform' action='' method='post' enctype='multipart/form-data'>
+										<form class='addform form' action='' method='post' enctype='multipart/form-data'>
 											<h2>Ajouter un morceau</h2>
 											<fieldset>
 												<input class='input-upload' id='le-morceau' name='fichier' type='file' required accept='audio/mp3, audio/mp4, audio/wma, audio/ogg, audio/wav'>

@@ -11,7 +11,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<script type="text/javascript" src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/musicplayer.js"></script>
 	</head>
 
 <?php
@@ -38,17 +37,39 @@ try {
 	JOIN album_morceau am ON m.id_morceau = am.Ref_morceau 
 	JOIN artiste_morceau arm ON am.Ref_morceau = arm.Ref_morceau
 	JOIN artiste a ON arm.Ref_artiste = a.id_artiste
-	WHERE am.Ref_album = ".$id_album."";
+    WHERE am.Ref_album = ".$id_album."";
+    
+   
 
 	$query = $db->prepare($afficherMusique);
 	$query->execute();
-	$musiques = $query->fetchAll(PDO::FETCH_ASSOC);
+    $musiques = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach($musiques as $musique) {
+       $url_morceau =  $musique["url_morceau"];
+    }
 
 	$afficherAlbum = "SELECT * FROM album WHERE id_album = ".$id_album."";
 
 	$query = $db->prepare($afficherAlbum);
 	$query->execute();
-	$albums = $query->fetchAll(PDO::FETCH_ASSOC);
+    $albums = $query->fetchAll(PDO::FETCH_ASSOC);
+
+    
+    
+    if(isset($_GET["id_morceau"])) {
+        $id_morceau = $_GET["id_morceau"];
+        // SUPPRIME LE MORCEAU 
+        $supprimerMorceau = "DELETE FROM morceau where id_morceau= $id_morceau";
+        $query = $db->prepare($supprimerMorceau);
+        $query->execute();
+        
+        // SUPPRIMER MUSIQUE DANS LE DOSSIER
+        unlink($url_morceau);
+
+        header("Location:suppr-ele.php?id_album=".$id_album."");
+        exit;
+    }
 
 
 
@@ -135,10 +156,10 @@ echo "
 
 							echo "
 								<tr >
-									<td> <a href='".$musique["url_morceau"]."'> <i class='fas fa-play'></i> </a> </td>
 									<td> ".$musique["titre_morceau"]." </td>
 									<td> ".$musique["nom_artiste"]." </td>
-									<td> ".$musique["duree_morceau"]." </td>
+                                    <td> ".$musique["duree_morceau"]." </td>
+                                    <td> <a href='suppr-ele.php?id_album=".$id_album."&id_morceau=".$musique["id_morceau"]."'> <span class='icon delete solid fa-trash'></span> </a> </td>
 								</tr>";
 							}
 
@@ -148,10 +169,6 @@ echo "
 						</div>
 					</section>
 				</div>
-				<audio id='audio' preload='auto' tabindex='0' controls='' controlsList='nodownload'>
-					<source src=''>
-					Your Fallback goes here
-				</audio>
 
 
 		<!-- Scripts -->

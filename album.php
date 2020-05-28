@@ -29,57 +29,80 @@
 			});
 		</script>
 	</head>
-	<body class="is-preload">
+	<?php
 
-		<!-- Header -->
-			<div id="header">
+	$dsn = 'mysql:dbname=djtools;host=localhost';
+	$user = 'root';
+	$password = '';
 
-				<div class="top">
+	try {
+		$db = new PDO($dsn, $user, $password);
+		 if ($db) {
+
+			// Alerte a chaque fois qu'une requête échoue
+			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        
+			// Désactive la simulation des requêtes préparés, 
+			// utilise l'interface native pour récupérer les données et leur type.
+			$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); 
+
+			$AfficherAlbum = "SELECT * FROM album";
+			$albums = $db->prepare($AfficherAlbum);
+			$albums->execute();
+			
+	echo "
+	<body class='is-preload'>
+			<div id='header'>
+
+				<div class='top'>
 
 					<!-- Logo -->
-						<div id="logo">
-							<h1 id="title">DJTools</h1>
+						<div id='logo'>
+							<h1 id='title'>DJTools</h1>
 						</div>
 
 					<!-- Nav -->
-					<nav id="nav">
+					<nav id='nav'>
 						<ul>
-							<li><a href="album.php"><span class="icon solid fa-th">Albums</span></a></li>
-							<li><a href="playlist.php"><span class="icon solid fa-th">Playlist</span></a></li>
-							<li><a href="ajouter-morceau.php"><span class="icon solid fa-plus">Ajouter un morceau</span></a></li>
-							<li><a href="ajouter-album.php"><span class="icon solid fa-plus">Ajouter un album</span></a></li>
-							<li><a href="ajouter-playlist.php"><span class="icon solid fa-plus">Ajouter une playlist</span></a></li>
+							<li><a href='album.php'><span class='icon solid fa-th'>Albums</span></a></li>
+							<li><a href='ajouter-morceau.php'><span class='icon solid fa-plus'>Ajouter un morceau</span></a></li>
+							<li><a href='ajouter-album.php'><span class='icon solid fa-plus'>Ajouter un album</span></a></li>
 						</ul>
 					</nav>
 				</div>
 			</div>
 
 			<!-- Main -->
-			<div id="main">
+			<div id='main'>
 				<!-- Portfolio -->
-				<section id="portfolio" class="two">
-					<input type="text" id="myInputSearchBar" placeholder="Rechercher un album ..." title="Type in a name" class='my-2'>
-					<div class="container flex-container">
-						<a href="album-ele.php?#ALBUM-ID">
+				<section id='portfolio' class='two'>
+					<input type='text' id='myInputSearchBar' placeholder='Rechercher un album ...' title='Type in a name' class='my-2'>
+					<div class='container flex-container'>
+					";
+
+					foreach ($albums as $album) {
+
+					$pochette = $album["pochette_album"];
+
+					echo "
+						<a href='album-ele.php?id_album=".$album["id_album"]."'>
 							<div class='box-container'>
-								<div class='album-cover' style="background-image: url('images/test1.jpg');"></div>
-								<div class='box-desc'>NI</div>
+								<div class='album-cover' style='background-image: url(./".$pochette.");'></div>
+								<div class='box-desc'>".$album["nom_album"]."</div>
 							</div>
 						</a>
-						<a href="album-ele.php?#ALBUM-ID">
-							<div class='box-container'>
-								<div class='album-cover' style="background-image: url('images/test2.jpg');"></div>
-								<div class='box-desc'>A1</div>
-							</div>
-						</a>
-						<a href="album-ele.php?#ALBUM-ID">
-							<div class='box-container'>
-								<div class='album-cover' style="background-image: url('images/test3.jpg');"></div>
-								<div class='box-desc'>PNL</div>
-							</div>
-						</a>
+						";
+					}
+
+				echo "
 					</div>
 				</section>
 			</div>
 	</body>
+	";
+}
+} catch (PDOException $e) {
+	$e->getMessage();
+}
+?>
 </html>
